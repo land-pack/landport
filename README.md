@@ -1,30 +1,36 @@
 # Landport
 
-Python online game framework (zeromq + redis + flask + gevent)
-
-###How to begin?
+Python online game framework (zeromq + redis + flask + gevent + tornado)
 
 
+Installation
+------------
 
-```
-cd landport/demo
-python manage.py
-```
-and then use a websocket client put the below url in it!
+You can install this package as usual with pip:
 
-```
-ws://127.0.0.1:9922/ws?node=123&room=4526&uid=455
-```
-you can should change your uid when you open a new client each time!
+    pip install landport
 
-###What the framework support?
----
+Example
+-------
 
-*1 chat
-*2 rank
-*3, virtual room
-*4, custom room
+	cd landport/demo
+	python manage.py
 
-###Why i build it?
----
-I can't find any useful game server, so i decide build myself! it's also need you help ! let's build it together!
+And then use a websocket client put the below url in it!
+
+	ws://127.0.0.1:9922/ws?node=123&room=4526&uid=455
+
+You should change your uid when you open a new client each time!
+
+Function
+-------
+
+	>> chat
+	>> rank
+	>> join/leave room
+	>> ...
+
+Why it?
+------
+
+I can't find any useful game server framework, so i decide build myself! it's also need you help ! let's build it together!
