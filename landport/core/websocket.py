@@ -7,7 +7,6 @@ import ujson
 import gevent
 from gevent import monkey
 from concurrent import futures
-from utils import color
 MAX_THREADS = 100
 thread_executor = futures.ThreadPoolExecutor(max_workers=MAX_THREADS)
 CHECK_IN_FAILURE = 101
