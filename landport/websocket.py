@@ -13,6 +13,10 @@ thread_executor = futures.ThreadPoolExecutor(max_workers=MAX_THREADS)
 CHECK_IN_FAILURE = 101
 JOIN_ROOM_FAILURE = 102
 INIT_TTL_FAILURE  = 103
+CHECK_OUT_FAILURE = 104
+DEL_TTL_FAILURE = 105
+LEAVE_ROOM_FAILURE = 106
+
 
 monkey.patch_all()
 
@@ -60,6 +64,37 @@ class AuthWebSocket(object):
             raise ValueError("init_data() must return a string instead of type(data)=%s" % type(data))
         self.obj.write_message(data)
 
+class DestoryWebSocket(object):
+    def __init__(self, obj):
+        self.obj = obj
+
+    def check_out(self):
+        """
+        Send check out request to roomserver by `HTTP`
+        """
+        return True
+    
+    def asyn_check_out(self):
+        """
+        Send check out request to roomserver by `WEBSOCKET`
+        """
+        return True
+
+    def leave_room(self):
+        raise NotImplementedError
+
+    def del_ttl(self):
+        raise NotImplementedError
+
+    def final(self):
+        raise NotImplementedError
+
+    def go(self):
+        if not self.check_out():self.obj.close(CHECK_OUT_FAILURE, 'check_out_failure')
+        if not self.asyn_check_out():self.obj.close(CHECK_OUT_FAILURE, 'check_out_failure')
+        if not self.del_ttl():self.obj.close(DEL_TTL_FAILURE, 'del_ttl_failure')
+        if not self.leave_room():self.obj.close(LEAVE_ROOM_FAILURE, 'leave_room_failure')
+        self.final()
 
 class WebsocketHandler(websocket.WebSocketHandler):
 
@@ -75,6 +110,7 @@ class WebsocketHandler(websocket.WebSocketHandler):
         pass
 
     def write_message(self, msg):
+        logger.info('send msg=%s', msg)
         if not self.stream.closed():
             super(WebsocketHandler, self).write_message(msg)
         else:
@@ -121,7 +157,7 @@ class UserConnectManager(object):
         room = handler.arg.get("room")
         if uid in cls.room_2_uid_set[room]:
             cls.room_2_uid_set[room].remove(uid)
-            
+
     @classmethod
     def send(cls, handler, msg):
         try:

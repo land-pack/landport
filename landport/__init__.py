@@ -1,7 +1,7 @@
 import logging
 import logging.config
 from websocket import WebsocketHandler
-from websocket import AuthWebSocket
+from websocket import AuthWebSocket, DestoryWebSocket
 from websocket import UserConnectManager
 from tornado import ioloop
 from tornado import web
@@ -38,7 +38,7 @@ class MyAuth(AuthWebSocket):
         #let other members know i in~
         init_d = {
             'messageid':'2000',
-            'messagetype':'init',
+            'messagetype':'i nit',
             'body':{
                 'members':[
                     'frank',
@@ -52,7 +52,7 @@ class MyAuth(AuthWebSocket):
             'messageid': '2012',
             'messagetype': 'user_in',
             'body':{
-                'info':'I am 123, i in now!'
+                'info':'I am {}, i in now!'.format(uid)
             }
 
         }
@@ -60,6 +60,34 @@ class MyAuth(AuthWebSocket):
         logger.info('notify_d=%s', notify_d)
         UserConnectManager.send_other(room, notify_d, uid)
         return ujson.dumps(init_d)
+
+class MyDestory(DestoryWebSocket):
+    def check_out(self):
+        return True
+    
+    def asyn_check_out(self):
+        return True
+
+    def leave_room(self):
+        UserConnectManager.leave(self.obj)
+        return True
+
+    def del_ttl(self):
+        return True
+
+    def final(self):
+        room = self.obj.arg.get('room')
+        uid = self.obj.arg.get('uid')     
+        notify_d  = {
+            'messageid': '2013',
+            'messagetype': 'user_out',
+            'body':{
+                'info':'I am {}, i out now!'.format(uid)
+            }
+
+        }
+        logger.info('notify_d=%s', notify_d)
+        UserConnectManager.send_other(room, notify_d, uid)
 
 class MyWebSocketHandler(WebsocketHandler):
     def open(self):
@@ -77,20 +105,7 @@ class MyWebSocketHandler(WebsocketHandler):
 
     def on_close(self):
         logger.info('>> on_close')
-        room = self.arg.get('room')
-        uid = self.arg.get('uid')
-
-        UserConnectManager.leave(self)
-        notify_d  = {
-            'messageid': '2013',
-            'messagetype': 'user_out',
-            'body':{
-                'info':'I am 123, i in now!'
-            }
-
-        }
-        logger.info('notify_d=%s', notify_d)
-        UserConnectManager.send_other(room, notify_d, uid)
+        MyDestory(self).go()
         # del clients[id(self)]
         # self.close()
 
