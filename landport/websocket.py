@@ -113,6 +113,16 @@ class UserConnectManager(object):
         return cls.room_2_uid_set[room]
 
     @classmethod
+    def leave(cls, handler):
+        uid = handler.arg.get('uid')
+        if uid in cls.uid_2_handler:
+            del cls.uid_2_handler[uid]
+
+        room = handler.arg.get("room")
+        if uid in cls.room_2_uid_set[room]:
+            cls.room_2_uid_set[room].remove(uid)
+            
+    @classmethod
     def send(cls, handler, msg):
         try:
             # logger.info("send to receiver uid=%s\tmsg=%s", handler.uid, msg)

@@ -77,6 +77,20 @@ class MyWebSocketHandler(WebsocketHandler):
 
     def on_close(self):
         logger.info('>> on_close')
+        room = self.arg.get('room')
+        uid = self.arg.get('uid')
+
+        UserConnectManager.leave(self)
+        notify_d  = {
+            'messageid': '2013',
+            'messagetype': 'user_out',
+            'body':{
+                'info':'I am 123, i in now!'
+            }
+
+        }
+        logger.info('notify_d=%s', notify_d)
+        UserConnectManager.send_other(room, notify_d, uid)
         # del clients[id(self)]
         # self.close()
 
