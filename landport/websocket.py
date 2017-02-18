@@ -27,15 +27,27 @@ class AuthWebSocket(object):
         self.obj = obj
 
     def check_in(self):
+        """
+        Here you can sync data to your roomserver!
+        """
         raise NotImplementedError
 
     def join_room(self):
+        """
+        Register the new user to your local UserConnectManager!
+        """
         raise NotImplementedError
 
     def init_ttl(self):
+        """
+        Set ttl for the new connect handler!
+        """
         raise NotImplementedError
 
     def init_data(self):
+        """
+        Here you can fetch user information from your database!
+        """
         raise NotImplementedError
 
 
@@ -92,25 +104,29 @@ class UserConnectManager(object):
         if room in cls.room_2_uid_set:
             cls.room_2_uid_set[room].add(uid)
         else:
-            cls.room_2_uid_set[room] = set(uid)
+            cls.room_2_uid_set[room] = set([uid,])
 
-        logger.info("join successfully")
+        logger.info("uid=%s join successfully", uid)
 
-
+    @classmethod
+    def members(cls, room):
+        return cls.room_2_uid_set[room]
 
     @classmethod
     def send(cls, handler, msg):
         try:
-            logger.info("send to receiver uid=%s\tmsg=%s", handler.uid, msg)
+            # logger.info("send to receiver uid=%s\tmsg=%s", handler.uid, msg)
             thread_executor.submit(handler.write_message, ujson.dumps(msg))
         except:
             logger.error(traceback.format_exc())
 
     @classmethod
     def send_other(cls, room, msg, sender):
+        logger.info('send message to other except uid=%s', sender)
         for uid in cls.room_2_uid_set[room] or []:
             if uid == sender: continue
             handler = cls.uid_2_handler.get(uid)
+            logger.info('handler is %s', handler)
             cls.send(handler, msg)
 
     @classmethod
