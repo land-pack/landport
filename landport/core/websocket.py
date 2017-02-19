@@ -6,9 +6,8 @@ from tornado import web
 import ujson
 import gevent
 from gevent import monkey
-from concurrent import futures
-MAX_THREADS = 100
-thread_executor = futures.ThreadPoolExecutor(max_workers=MAX_THREADS)
+
+
 CHECK_IN_FAILURE = 101
 JOIN_ROOM_FAILURE = 102
 INIT_TTL_FAILURE  = 103
@@ -105,8 +104,24 @@ class WebsocketHandler(websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def close_when_expire(self, code, reason):
-        pass
+    def bind_ttl(self, ttl):
+        setattr(self, 'ttl', ttl)
+
+    def close_when_expire(self, ttl_type, code, reason):
+        logger.debug("Clean bad websock handler:\tuid=%s", self.arg.get('uid'))
+        if ttl_type == 'ping':
+            logger.warning("Heart beat expire:\tid(connect)=%s\tuid=%s", id(self), self.arg.get('uid'))
+            self.close(code, reason)
+    #     try:
+    #         # kick_off_uid.append(id(self))
+    #         # self.send_kick_off()
+    #         # for each in range(5, HEART_BEAT_TIMEOUT, 5):
+    #         #     ioloop.IOLoop.instance().add_timeout(time.time() + each, self.send_kick_off)
+    #         # ioloop.IOLoop.instance().add_timeout(time.time() + HEART_BEAT_TIMEOUT + 2, self.remove_heart_beat)
+    #         # ioloop.IOLoop.instance().add_timeout(time.time() + HEART_BEAT_TIMEOUT + 5, self.close)
+    #         logger.info('notify the user, he has expire ~~')
+    #     except Exception as ex:
+    #         logger.error(traceback.format_exc())
 
     def write_message(self, msg):
         logger.info('send msg=%s', msg)
@@ -117,78 +132,4 @@ class WebsocketHandler(websocket.WebSocketHandler):
 
     def close(self, code, reason):
         logger.warning('>>close:code=%s|reason=%s',code, reason)
-        super(WebSocketHandler, self).close(code, reason)
-
-
-class UserConnectManager(object):
-
-    room_2_uid_set = {}
-    uid_2_handler = {}
-
-    @classmethod
-    def clean_old_handler(cls, handler):
-        handler.close()
-
-    @classmethod
-    def join(cls, uid, room, handler):
-
-        if uid in cls.uid_2_handler:
-            cls.clean_old_handler(cls.uid_2_handler[uid])
-        cls.uid_2_handler[uid] = handler
-
-        if room in cls.room_2_uid_set:
-            cls.room_2_uid_set[room].add(uid)
-        else:
-            cls.room_2_uid_set[room] = set([uid,])
-
-        logger.info("uid=%s join successfully", uid)
-
-    @classmethod
-    def members(cls, room):
-        return cls.room_2_uid_set[room]
-
-    @classmethod
-    def leave(cls, handler):
-        uid = handler.arg.get('uid')
-        if uid in cls.uid_2_handler:
-            del cls.uid_2_handler[uid]
-
-        room = handler.arg.get("room")
-        if uid in cls.room_2_uid_set[room]:
-            cls.room_2_uid_set[room].remove(uid)
-
-    @classmethod
-    def send(cls, handler, msg):
-        try:
-            # logger.info("send to receiver uid=%s\tmsg=%s", handler.uid, msg)
-            thread_executor.submit(handler.write_message, ujson.dumps(msg))
-        except:
-            logger.error(traceback.format_exc())
-
-    @classmethod
-    def send_other(cls, room, msg, sender):
-        logger.info('send message to other except uid=%s', sender)
-        for uid in cls.room_2_uid_set[room] or []:
-            if uid == sender: continue
-            handler = cls.uid_2_handler.get(uid)
-            logger.info('handler is %s', handler)
-            cls.send(handler, msg)
-
-    @classmethod
-    def send_all(cls, room, msg):
-        cls.send_other(cls, room, msg, sender=None)
-
-    @classmethod
-    def broadcast(cls, msg):
-        for room in cls.room_2_uid_set:
-            cls.send_all(room, msg)
-
-
-if __name__ == '__main__':
-	 io_loop = ioloop.IOLoop.instance()
-	 app = web.Application(handlers=[
-        (r'/ws', MyWebSocketHandler)
-        ])
-
-	 app.listen(9922)
-	 io_loop.start()
+        super(WebsocketHandler, self).close()

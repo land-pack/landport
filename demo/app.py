@@ -4,11 +4,12 @@ sys.path.append("..")
 
 import logging
 import ujson
-
 from landport.core.websocket import WebsocketHandler
 from landport.core.websocket import AuthWebSocket, DestoryWebSocket
-from landport.core.websocket import UserConnectManager
+from landport.core.user import UserConnectManager
 from landport.utils import color
+
+
 
 logger = logging.getLogger('simple')
 
@@ -23,12 +24,14 @@ class MyAuth(AuthWebSocket):
         return True
 
     def join_room(self):
+        logger.info('join room')
         uid =self.obj.arg.get("uid")
         room=self.obj.arg.get("room")
         UserConnectManager.join(uid, room, self.obj)
         return True
 
     def init_ttl(self):
+        self.obj.ttl.update(self.obj)
         return True
 
     def init_data(self):
