@@ -5,6 +5,9 @@ class DispatchManager(object):
 		self.handler = handler
 		self.message = message
 
+	def default(self, handler, message):
+		self.handler.write_message('unknow messagetype')
+
 	def go(self):
 		try:
 			data = ujson.loads(self.message)
@@ -17,4 +20,4 @@ class DispatchManager(object):
 			messagetype = data.get('messagetype')
 			if messagetype.startswith('_'):
 				raise ValueError("Invalid messagetype name {}".format(messagetype))
-			getattr(self, messagetype)(self.handler, data)
+			getattr(self, messagetype, getattr(self, 'default'))(self.handler, data)

@@ -27,11 +27,6 @@ class MyWebSocketHandler(WebsocketHandler):
             MyDispatcher(self, message).go()
         except:
             logger.error(traceback.format_exc())
-        # self.write_message(message)
-        # if 'shutdown' in message:
-        #     #ioloop.PeriodicCallback(self.call_shutdown, 2000).start()
-        #     self.close(102, 'shutdown by client command')
-            
 
     def on_close(self):
         logger.info('>> on_close')
