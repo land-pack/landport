@@ -45,12 +45,8 @@ class MyAuth(AuthWebSocket):
             'messageid':'2000',
             'messagetype':'i nit',
             'body':{
-                'members':[
-                    'frank',
-                    'jack',
-                    'lisa'
-                ],
-                'numbers':'3'
+                'members':members,
+                'numbers':len(members)
             }
         }
         notify_d  = {
@@ -61,7 +57,6 @@ class MyAuth(AuthWebSocket):
             }
 
         }
-        # UserConnectManager.send(self.obj, init_d)
         logger.info('notify_d=%s', notify_d)
         UserConnectManager.send_other(room, notify_d, uid)
         return ujson.dumps(init_d)

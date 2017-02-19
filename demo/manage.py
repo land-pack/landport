@@ -19,9 +19,7 @@ class MyWebSocketHandler(WebsocketHandler):
     def open(self):
         logger.info('>> open')
         self.bind_ttl(ttl_hb)
-        # try:
         MyAuth(self).go()
-        logger.info('open...')
 
     def on_message(self, message):
         print '>> on_message'
