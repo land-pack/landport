@@ -5,8 +5,8 @@ sys.path.append("..")
 import logging
 import ujson
 from landport.core.websocket import WebsocketHandler
-from landport.core.websocket import AuthWebSocket, DestoryWebSocket
 from landport.core.user import UserConnectManager
+from landport.core.auth import AuthWebSocket, DestoryWebSocket
 from landport.utils import color
 
 
@@ -16,6 +16,7 @@ logger = logging.getLogger('simple')
 
 class MyAuth(AuthWebSocket):
     def check_in(self):
+
 
         # if self.obj.arg.get("uid") != '456':
         #     self.obj.write_message("see you later~")
