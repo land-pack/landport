@@ -5,13 +5,13 @@ from tornado import ioloop
 from tornado import web
 from app import WebsocketHandler
 from app import MyAuth, MyDestory
-from landport.core.ttl import TTLManager
+from landport.utils.ttl import TTLManager
 
 
 logging.config.fileConfig("../etc/dev_log.conf")
 logger = logging.getLogger('simple')
 
-ttl_hb = TTLManager(timeout=5, ttl_type='ping', detail=False)
+ttl_hb = TTLManager(timeout=15, ttl_type='ping', detail=True)
 ttl_hb.start()
 
 
