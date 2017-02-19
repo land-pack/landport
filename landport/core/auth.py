@@ -8,11 +8,21 @@ LEAVE_ROOM_FAILURE = 106
 class AuthWebSocket(object):
 
     def __init__(self, obj):
+        """
+        Set Websocket handler as `obj` attribute!
+        """
         self.obj = obj
 
     def check_in(self):
         """
         Here you can sync data to your roomserver!
+        Usage:
+            1. Ask your roomserver, is the guy valid
+            2. When the guy register on the roomserver
+            the local node will also receiver some notify
+            from the roomserver by WebSocket, so when the guy
+            connect to the local node, will directory check in!
+            3. ...
         """
         raise NotImplementedError
 
