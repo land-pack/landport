@@ -4,7 +4,7 @@ import logging.config
 from tornado import ioloop
 from tornado import web
 from app import WebsocketHandler
-from app import MyAuth, MyDestory
+from app import MyAuth, MyDestory, MyDispatcher
 from landport.utils.ttl import TTLManager
 
 
@@ -23,10 +23,14 @@ class MyWebSocketHandler(WebsocketHandler):
 
     def on_message(self, message):
         print '>> on_message'
-        self.write_message(message)
-        if 'shutdown' in message:
-            #ioloop.PeriodicCallback(self.call_shutdown, 2000).start()
-            self.close(102, 'shutdown by client command')
+        try:
+            MyDispatcher(self, message).go()
+        except:
+            logger.error(traceback.format_exc())
+        # self.write_message(message)
+        # if 'shutdown' in message:
+        #     #ioloop.PeriodicCallback(self.call_shutdown, 2000).start()
+        #     self.close(102, 'shutdown by client command')
             
 
     def on_close(self):

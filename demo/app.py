@@ -7,6 +7,7 @@ import ujson
 from landport.core.websocket import WebsocketHandler
 from landport.core.user import UserConnectManager
 from landport.core.auth import AuthWebSocket, DestoryWebSocket
+from landport.core.dispatch import DispatchManager
 from landport.utils import color
 
 
@@ -44,7 +45,7 @@ class MyAuth(AuthWebSocket):
         #let other members know i in~
         init_d = {
             'messageid':'2000',
-            'messagetype':'i nit',
+            'messagetype':'init',
             'body':{
                 'members':members,
                 'numbers':len(members)
@@ -61,6 +62,11 @@ class MyAuth(AuthWebSocket):
         logger.info('notify_d=%s', notify_d)
         UserConnectManager.send_other(room, notify_d, uid)
         return ujson.dumps(init_d)
+
+class MyDispatcher(DispatchManager):
+    def hello(self, handler, data):
+        logger.info('hello messagetype ...')
+        handler.write_message('good bye')
 
 class MyDestory(DestoryWebSocket):
     def check_out(self):
@@ -85,7 +91,6 @@ class MyDestory(DestoryWebSocket):
             'body':{
                 'info':'I am {}, i out now!'.format(uid)
             }
-
         }
         logger.info('notify_d=%s', notify_d)
         UserConnectManager.send_other(room, notify_d, uid)
