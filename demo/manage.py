@@ -14,22 +14,22 @@ logger = logging.getLogger('simple')
 ttl_hb = TTLManager(timeout=15, ttl_type='ping', detail=True)
 ttl_hb.start()
 
+# ttl_hv = TTLManager(timeout=25, ttl_type='hv', detail=True)
+# ttl_hv.start()
 
 class MyWebSocketHandler(WebsocketHandler):
     def open(self):
-        logger.info('>> open')
         self.bind_ttl(ttl_hb)
+        #self.bind_ttl(name='hv', ttl_hv)
         MyAuth(self).go()
 
     def on_message(self, message):
-        print '>> on_message'
         try:
             MyDispatcher(self, message).go()
         except:
             logger.error(traceback.format_exc())
 
     def on_close(self):
-        logger.info('>> on_close')
         MyDestory(self).go()
 
 if __name__ == '__main__':

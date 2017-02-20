@@ -4,10 +4,7 @@ from tornado import websocket
 from tornado import ioloop
 from tornado import web
 import ujson
-import gevent
-from gevent import monkey
 
-monkey.patch_all()
 
 clients = {}
 
