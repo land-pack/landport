@@ -10,26 +10,32 @@ socket.connect("tcp://127.0.0.1:6666")
 # socket.setsockopt(zmq.SUBSCRIBE,'xxx') 
 
 loop = ioloop.IOLoop.instance()
-def landport(channel):
+def landport(*channel):
 	def _wrapper(f):
-		socket.setsockopt(zmq.SUBSCRIBE, b"{}".format(channel))
-		loop.add_handler(socket, f, zmq.POLLIN)
+		for i in channel:
+			socket.setsockopt(zmq.SUBSCRIBE, b"{}".format(i))
+			loop.add_handler(socket, f, zmq.POLLIN)
 		def __wrapper(*args, **kwargs):
 			return f
 		return __wrapper
 	return _wrapper
 
-@landport("xxx")
+# @landport("SystemNotify")
+@landport("GameRealtimeMessage","SystemNotify")
 def req_handler(sock, events):
 	# msg = sock.recv()
 	[address, contents] = sock.recv_multipart()
-	print("[%s] %s" % (address, contents))
+	print("?xxx [%s] %s" % (address, contents))
 	# print msg
 
-@landport("A")
+# @landport("GameRealtimeMessage")
 def req_handler2(sock, events):
 	# msg = sock.recv()
 	[address, contents] = sock.recv_multipart()
-	print("[%s] %s" % (address, contents))
+	print("XXXAAA [%s] %s" % (address, contents))
 
+# socket.setsockopt(zmq.SUBSCRIBE, b"{}".format('GameRealtimeMessage'))
+# loop.add_handler(socket, req_handler, zmq.POLLIN)
+# socket.setsockopt(zmq.SUBSCRIBE, b"{}".format('SystemNotify'))
+# loop.add_handler(socket, req_handler2, zmq.POLLIN)
 loop.start()

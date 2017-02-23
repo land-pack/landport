@@ -49,7 +49,6 @@ class UserConnectManager(object):
     @classmethod
     def send(cls, handler, msg):
         try:
-            # logger.info("send to receiver uid=%s\tmsg=%s", handler.uid, msg)
             thread_executor.submit(handler.write_message, ujson.dumps(msg))
         except:
             logger.error(traceback.format_exc())
@@ -60,7 +59,6 @@ class UserConnectManager(object):
         for uid in cls.room_2_uid_set[room] or []:
             if uid == sender: continue
             handler = cls.uid_2_handler.get(uid)
-            logger.info('handler is %s', handler)
             cls.send(handler, msg)
 
     @classmethod

@@ -1,6 +1,6 @@
 import ujson
 
-class DispatchManager(object):
+class ClientDispatchManager(object):
 	def __init__(self, handler, message):
 		self.handler = handler
 		self.message = message
@@ -21,3 +21,18 @@ class DispatchManager(object):
 			if messagetype.startswith('_'):
 				raise ValueError("Invalid messagetype name {}".format(messagetype))
 			getattr(self, messagetype, getattr(self, 'default'))(self.handler, data)
+
+
+class CenterDispatchManager(object):
+	def __init__(self, message):
+		self.message = message
+
+	def default(self, message):
+		raise ValueError('unknow messagetype: %s' % message)
+
+	def go(self):
+		data = ujson.loads(self.message)
+		messagetype = data.get('messagetype')
+		if messagetype.startswith('_'):
+			raise ValueError("Invalid messagetype name {}".format(messagetype))
+		getattr(self, messagetype, getattr(self, 'default'))(data)

@@ -7,6 +7,23 @@
 """
 import time
 import zmq
+import ujson
+
+a = {
+    "messagetype":"hello",
+    "messageid":"10003",
+    "body":{
+        "good":"fine"
+    }
+}
+
+b = {
+    "messagetype":"hey",
+    "messageid":"10004",
+    "body":{
+        "good":"fine"
+    }
+}
 
 def main():
     """main method"""
@@ -18,8 +35,8 @@ def main():
 
     while True:
         # Write two messages, each with an envelope and content
-        publisher.send_multipart([b"A", b"We don't want to see this"])
-        publisher.send_multipart([b"B", b"We would like to see this"])
+        publisher.send_multipart([b"SystemNotify", ujson.dumps(a)]) #hello
+        publisher.send_multipart([b"GameRealtimeMessage", ujson.dumps(b)]) #hey
         time.sleep(1)
 
     # We never get here but clean up anyhow

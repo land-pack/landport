@@ -4,23 +4,24 @@ sys.path.append("..")
 
 import logging
 import ujson
+import traceback
 from landport.core.websocket import WebsocketHandler
 from landport.core.user import UserConnectManager
 from landport.core.auth import AuthWebSocket, DestoryWebSocket
-from landport.core.dispatch import DispatchManager
 from landport.utils import color
 from landport.core.sub import topic
-
+from dispatch import MyCenterMessageDispatcher
 
 logger = logging.getLogger('simple')
 
-@topic("A")
-def req_handler(sock, events):
+@topic("SystemNotify", "GameRealtimeMessage")
+def sub_handler(sock, events):
     [address, contents] = sock.recv_multipart()
-    print("[%s] %s" % (address, contents))
-    UserConnectManager.broadcast(contents)
-    logger.info("broadcast ...%s", contents)
-
+    logger.info("[%s] %s" % (address, contents))
+    try:
+        MyCenterMessageDispatcher(contents).go()
+    except:
+        logger.error(traceback.format_exc())
 
 class MyAuth(AuthWebSocket):
     def check_in(self):
@@ -70,10 +71,6 @@ class MyAuth(AuthWebSocket):
         UserConnectManager.send_other(room, notify_d, uid)
         return ujson.dumps(init_d)
 
-class MyDispatcher(DispatchManager):
-    def hello(self, handler, data):
-        logger.info('hello messagetype ...')
-        handler.write_message('good bye')
 
 class MyDestory(DestoryWebSocket):
     def check_out(self):

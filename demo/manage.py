@@ -4,14 +4,15 @@ import logging.config
 from tornado import ioloop
 from tornado import web
 from app import WebsocketHandler
-from app import MyAuth, MyDestory, MyDispatcher
+from app import MyAuth, MyDestory
+from dispatch import MyClientMessageDispatcher
 from landport.utils.ttl import TTLManager
 
 
 logging.config.fileConfig("../etc/dev_log.conf")
 logger = logging.getLogger('simple')
 
-ttl_hb = TTLManager(timeout=15, ttl_type='ping', detail=True)
+ttl_hb = TTLManager(timeout=150, ttl_type='ping', detail=True)
 ttl_hb.start()
 
 # ttl_hv = TTLManager(timeout=25, ttl_type='hv', detail=True)
@@ -25,7 +26,7 @@ class MyWebSocketHandler(WebsocketHandler):
 
     def on_message(self, message):
         try:
-            MyDispatcher(self, message).go()
+            MyClientMessageDispatcher(self, message).go()
         except:
             logger.error(traceback.format_exc())
 
