@@ -29,8 +29,45 @@ class Ranklist(object):
 		return self.__str__()
 
 class RankManager(object):
-	def __init__(self, rank, prize):
+	def __init__(self, rank, prize, my=None):
 		pass
+
+	def add_profit(self, lst):
+		"""
+		Example:
+			[
+				{"gold":200, "prize":400},
+				{"gold":100, "prize":600}
+			]
+		Return:
+			[
+				{"gold":200, "prize":400, "profit":200},
+				{"gold":100, "prize":600, "profit":500}
+			]
+		"""
+		pass
+
+	def add_total_gold(self):
+		pass
+
+	def add_username(self):
+		pass
+
+	def add_rank(self):
+		pass
+
+	def add_prize_level(self):
+		pass
+
+	def add_prize(self):
+		pass
+
+	
+	
+
+
+
+
 
 if __name__ == '__main__':
 	p1 = Ranklist('jack' ,'chinese', 'math', chinese=95, math=88)

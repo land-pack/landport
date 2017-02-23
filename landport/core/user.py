@@ -65,7 +65,8 @@ class UserConnectManager(object):
 
     @classmethod
     def send_all(cls, room, msg):
-        cls.send_other(cls, room, msg, sender=None)
+        logger.info("Send all user with msg=%s", msg)
+        cls.send_other(room, msg, sender=None)
 
     @classmethod
     def broadcast(cls, msg):

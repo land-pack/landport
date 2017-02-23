@@ -9,10 +9,17 @@ from landport.core.user import UserConnectManager
 from landport.core.auth import AuthWebSocket, DestoryWebSocket
 from landport.core.dispatch import DispatchManager
 from landport.utils import color
-
+from landport.core.sub import topic
 
 
 logger = logging.getLogger('simple')
+
+@topic("A")
+def req_handler(sock, events):
+    [address, contents] = sock.recv_multipart()
+    print("[%s] %s" % (address, contents))
+    UserConnectManager.broadcast(contents)
+    logger.info("broadcast ...%s", contents)
 
 
 class MyAuth(AuthWebSocket):
