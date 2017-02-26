@@ -1,11 +1,14 @@
 # Landport
 
-Python online game framework (zeromq + redis + flask + gevent + tornado). you can easy build a multi-players video/web/mobile app ~:)
+Python online game framework (zeromq + redis + flask + gevent + tornado). you can easy build a multi-players video/web/mobile game ~:)
 
 
 Installation
 ------------
 Create your running environment:
+	
+	# pick a path , example your home path
+	cd ~
 	virtualenv venv
 
 You can install this package as usual with pip:
