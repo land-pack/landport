@@ -1,9 +1,18 @@
+import zmq
+import ujson
+
 CHECK_IN_FAILURE = 101
 JOIN_ROOM_FAILURE = 102
 INIT_TTL_FAILURE  = 103
 CHECK_OUT_FAILURE = 104
 DEL_TTL_FAILURE = 105
 LEAVE_ROOM_FAILURE = 106
+port = 9321
+
+context = zmq.Context()
+socket = context.socket(zmq.REQ)
+socket.connect ("tcp://localhost:%s" % port)
+
 
 class AuthWebSocket(object):
 
@@ -24,7 +33,19 @@ class AuthWebSocket(object):
             connect to the local node, will directory check in!
             3. ...
         """
-        raise NotImplementedError
+        uid = self.obj.arg.get("uid")
+        created = self.obj.arg.get("created")
+        data = {
+            "uid":uid,
+            "created":created
+        }
+        socket.send(ujson.dumps(data))
+        #  Get the reply.
+        message = socket.recv()
+        if message == 'yes':
+            return True
+        else:
+            return False
 
     def join_room(self):
         """

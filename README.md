@@ -5,6 +5,8 @@ Python online game framework (zeromq + redis + flask + gevent + tornado)
 
 Installation
 ------------
+Create your running environment:
+	virtualenv venv
 
 You can install this package as usual with pip:
 
@@ -14,11 +16,20 @@ Example
 -------
 
 	cd landport/demo
-	python manage.py
 
-And then use a websocket client put the below url in it!
+	# open first terminal run a game node server
+	python manage.py 
+	# open second terminal run a game room server
+	python room.py
+	# open thrid terminal run a client-side/
+	python app.py
 
-	ws://127.0.0.1:9922/ws?node=123&room=4526&uid=455
+First at first you need apply a game room, so visit the roomserver by:
+	http://x.x.x.x:xx/join?uid=xx
+
+And then you will got something response , there are include your `created`,`node`,`ip`,`port`,`room`,`uid`. Put those on a websocket client as below url show!
+	
+	ws://x.x.x.x:xx/ws?ip=x.x.x.x&port=xx&node=xx&room=xx&created=xxx&uid=xx
 
 You should change your uid when you open a new client each time!
 
