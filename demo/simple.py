@@ -19,7 +19,6 @@ ttl_hb.start()
 class MyWebSocketHandler(WebsocketHandler):
     def open(self):
         self.bind_ttl(ttl_hb)
-        #self.bind_ttl(name='hv', ttl_hv)
         MyAuth(self).go()
 
     def on_message(self, message):
