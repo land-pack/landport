@@ -1,6 +1,6 @@
 # Landport
 
-Python online game framework (zeromq + redis + flask + gevent + tornado)
+Python online game framework (zeromq + redis + flask + gevent + tornado). you can easy build a multi-players video/web/mobile app ~:)
 
 
 Installation
@@ -25,6 +25,7 @@ Example
 	python app.py
 
 First at first you need apply a game room, so visit the roomserver by:
+	
 	http://x.x.x.x:xx/join?uid=xx
 
 And then you will got something response , there are include your `created`,`node`,`ip`,`port`,`room`,`uid`. Put those on a websocket client as below url show!
