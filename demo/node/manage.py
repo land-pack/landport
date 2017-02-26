@@ -9,7 +9,7 @@ from dispatch import MyClientMessageDispatcher
 from landport.utils.ttl import TTLManager
 
 
-logging.config.fileConfig("../etc/dev_log.conf")
+logging.config.fileConfig("../etc/node_log.conf")
 logger = logging.getLogger('simple')
 
 ttl_hb = TTLManager(timeout=150, ttl_type='ping', detail=True)
@@ -22,7 +22,10 @@ class MyWebSocketHandler(WebsocketHandler):
     def open(self):
         self.bind_ttl(ttl_hb)
         #self.bind_ttl(name='hv', ttl_hv)
-        MyAuth(self).go()
+        try:
+            MyAuth(self).go()
+        except:
+            logger.error(traceback.format_exc())
 
     def on_message(self, message):
         try:

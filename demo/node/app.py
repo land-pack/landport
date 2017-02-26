@@ -10,6 +10,7 @@ from dispatch import MyCenterMessageDispatcher
 
 logger = logging.getLogger('simple')
 
+
 @topic("SystemNotify", "GameRealtimeMessage")
 def sub_handler(sock, events):
     [address, contents] = sock.recv_multipart()
@@ -20,14 +21,6 @@ def sub_handler(sock, events):
         logger.error(traceback.format_exc())
 
 class MyAuth(AuthWebSocket):
-    def check_in(self):
-
-
-        # if self.obj.arg.get("uid") != '456':
-        #     self.obj.write_message("see you later~")
-        #     # gevent.sleep(2)
-        #     return False
-        return True
 
     def join_room(self):
         logger.info('join room')
