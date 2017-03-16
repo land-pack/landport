@@ -139,5 +139,9 @@ class RanklistBase(dict):
                 })
         return new_d
 
-    def rank(self):
-        return self.ranklist if self.ranklist else self.values()
+    def about_me(self, uid):
+        return self.get(uid, {})
+
+    def top(self, care=10):
+        lst = self.ranklist if self.ranklist else self.values()
+        return lst[:care]

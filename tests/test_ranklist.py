@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     rk.sort_by("profit").add_rank().add_gift(your_mongodb_gift_configure).add_value_from(fetch_from_your_mysql_db_by_uid, 'uid', 'name').add_trend()
 
-    print(rk.rank())
+    print(rk.top())
     print("=" * 100)
     rk2 = Ranklist('last_ranklist_cache', r)
     rk2.push_in(user_a)
@@ -53,4 +53,7 @@ if __name__ == '__main__':
     rk2.push_in(user_b)
     rk2.push_in(user_c)
     rk2.sort_by("profit").add_rank().add_gift(your_mongodb_gift_configure).add_value_from(fetch_from_your_mysql_db_by_uid, 'uid', 'name').add_trend()
-    print(rk2.rank())
+    print(rk2.top(2))
+    print("=" * 100)
+    print("about me")
+    print(rk2.about_me('1002922'))
