@@ -6,7 +6,7 @@ start = time.time()
 
 for i in range(1000):
 	r = requests.get('http://127.0.0.1:9933/?num1=123&num2=456')
-	# print r.content
+	print r.content
 
 end = time.time()
 

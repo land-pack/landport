@@ -87,9 +87,14 @@ class RoomManager(object):
         create_time = time.time()
         created = '{:6f}'.format(create_time)
         cls.uid_to_created[uid]=created 
+        #ip, port = room_name.split('-')
         data = {
+            # 'ip':ip,
+            # 'port':port,
+            # 'node':ip-port,
             'room': room_name,
-            'created': created
+            'created': created,
+            'uid':uid
         }
         #TODO cls.set_ttl(uid, create_time, expire=5)
         return data

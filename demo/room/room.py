@@ -21,24 +21,12 @@ class JoinHandler(web.RequestHandler):
         self.write('%s' % (int(num2)+int(num1)))
 
 
-def f(sock, events):
-	message = sock.recv()
-	data = ujson.loads(message)
-	uid = data.get('uid')
-	created = data.get('created')
-	logger.info('uid=%s--created=%s', uid, created)
-	ok = True
-	if ok:
-		sock.send('yes')
-	else:
-		sock.send('no')
-
 
 if __name__ == '__main__':
     logger.info("Start room server - listen on port: 9933")
     app = web.Application(handlers=[
     	(r'/join', JoinHandler)
     ])
-    loop.add_handler(socket, f, zmq.POLLIN)
+    
     app.listen(9933)
     loop.start()
