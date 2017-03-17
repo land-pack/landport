@@ -1,32 +1,40 @@
 import ujson
 
 class RanklistBase(dict):
-    def __init__(self, name, r, ex=30):
+    def __init__(self, name, redis_handler, ex=30):
         self.name = name
-        self.redis_handler = r
+        self.redis_handler = redis_handler
         self.ex = ex
         self.ranklist = []
+        self.plugin_functions = []
+
+    def plugin(self, f=None):
+        """
+        f is a outside function, you can declare as below show:
+        you should know the d has include `prize` and `gold` before
+        you do something like the below example!
+        def profit(d):
+            p = d.get("prize") - d.get("gold")
+            d.update({"profit": p})
+        """
+        if f:self.plugin_functions.append(f)
 
 
-    def push_in(self, d):
-        self._profit(d)
-        uid = d.get("uid")
-        uid = str(uid)
-        d.update({"uid": uid})
-        self[uid] = d
+    def push_in(self, item, primary='uid'):
+        """
+        The item base structure as below show:
+        {
+            "uid":"12345",
+            "score":98,
+            "something":"something"
+        }
+        """
+        # self.item = item
+        uid = str(item.get(primary))
+        item.update({primary: uid})
+        [f(item) for f in self.plugin_functions] 
+        self[uid] = item
 
-    def pop_out(self, data):
-        pass
-
-    def __lt__(self, other):
-        pass
-
-    def __contains__(self, item):
-        pass
-
-    def _profit(self, d):
-        p = d.get("prize") - d.get("gold")
-        d.update({"profit": p})
 
     def sort_by(self, key):
         self.ranklist = sorted(self.values(), lambda x, y: cmp(x[key], y[key]), reverse=True)

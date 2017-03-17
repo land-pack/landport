@@ -16,8 +16,20 @@ your_mongodb_gift_configure = {
         "2~3": {"22": 33}
     }
 
+def add_profit(d):
+    p = d.get("prize") - d.get("gold")
+    d.update({"profit": p})
+
+def add_userinfotmation(d):
+    uid = d.get("uid")
+    print('xxxx%s' % type(uid))
+    username = fetch_from_your_mysql_db_by_uid(uid)
+    d.update({"username":username})
+
 if __name__ == '__main__':
     rk = Ranklist('last_ranklist_cache', r)
+    rk.plugin(add_profit)
+    rk.plugin(add_userinfotmation)
     user_a = {
         "gold": 120,
         "prize": 220,
@@ -39,12 +51,15 @@ if __name__ == '__main__':
     rk.push_in(user_c)
 
 
-    rk.sort_by("profit").add_rank().add_gift(your_mongodb_gift_configure).add_value_from(fetch_from_your_mysql_db_by_uid, 'uid', 'name').add_trend()
+    rk.sort_by("profit").add_rank().add_gift(your_mongodb_gift_configure).add_trend()
 
     print(rk.top())
     print("=" * 100)
     rk2 = Ranklist('last_ranklist_cache', r)
+    rk2.plugin(add_profit)
+    rk2.plugin(add_userinfotmation)
     rk2.push_in(user_a)
+
     user_b = {
         "gold": 120,
         "prize": 520,
@@ -52,7 +67,7 @@ if __name__ == '__main__':
     }
     rk2.push_in(user_b)
     rk2.push_in(user_c)
-    rk2.sort_by("profit").add_rank().add_gift(your_mongodb_gift_configure).add_value_from(fetch_from_your_mysql_db_by_uid, 'uid', 'name').add_trend()
+    rk2.sort_by("profit").add_rank().add_gift(your_mongodb_gift_configure).add_trend()
     print(rk2.top(2))
     print("=" * 100)
     print("about me")
