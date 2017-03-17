@@ -43,15 +43,26 @@ class RanklistBase(dict):
     def sort_by_many(self, *args):
         pass
 
-    def add_rank(self, skip_the_same=True):
+
+    def add_rank(self, care='profit', conflict=True):
         j = 1
         new_rank_list = []
+        last_record = {}
         for i in self.ranklist:
+            rank_index = j
+            if conflict:
+                last_v = last_record.get(care)
+                rank_index = last_record.get("rank") if int(i.get(care)) == last_v else j
+
             i.update({
-                "rank": str(j)
+                "rank": str(rank_index)
             })
             j += 1
             new_rank_list.append(i)
+            last_record.update({
+                care: i.get(care),
+                "rank": str(rank_index)
+            })
         self.ranklist = new_rank_list
         return self
 

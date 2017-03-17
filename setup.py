@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name='Landport',
-    version='1.1.8',
+    version='1.1.9',
     url='https://github.com/land-pack/landport',
     license='MIT',
     author='Frank AK',
@@ -24,7 +24,6 @@ setup(
     install_requires=[
         'tornado',
         'ujson',
-        'gevent',
         'futures',
         'flask'
     ],
