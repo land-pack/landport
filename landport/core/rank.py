@@ -1,6 +1,8 @@
 import ujson
 
+
 class RanklistBase(dict):
+
     def __init__(self, name, redis_handler, ex=30):
         self.name = name
         self.redis_handler = redis_handler
@@ -17,8 +19,11 @@ class RanklistBase(dict):
             p = d.get("prize") - d.get("gold")
             d.update({"profit": p})
         """
-        if f:self.plugin_functions.append(f)
-
+        if len(self) > 0:
+            raise RuntimeError(
+                "You should install plugin before push_in anything")
+        if f:
+            self.plugin_functions.append(f)
 
     def push_in(self, item, primary='uid'):
         """
@@ -32,17 +37,16 @@ class RanklistBase(dict):
         # self.item = item
         uid = str(item.get(primary))
         item.update({primary: uid})
-        [f(item) for f in self.plugin_functions] 
+        [f(item) for f in self.plugin_functions]
         self[uid] = item
 
-
     def sort_by(self, key):
-        self.ranklist = sorted(self.values(), lambda x, y: cmp(x[key], y[key]), reverse=True)
+        self.ranklist = sorted(
+            self.values(), lambda x, y: cmp(x[key], y[key]), reverse=True)
         return self
 
     def sort_by_many(self, *args):
         pass
-
 
     def add_rank(self, care='profit', conflict=True):
         j = 1
@@ -52,7 +56,8 @@ class RanklistBase(dict):
             rank_index = j
             if conflict:
                 last_v = last_record.get(care)
-                rank_index = last_record.get("rank") if int(i.get(care)) == last_v else j
+                rank_index = last_record.get("rank") if int(
+                    i.get(care)) == last_v else j
 
             i.update({
                 "rank": str(rank_index)

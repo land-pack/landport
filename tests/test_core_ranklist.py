@@ -252,6 +252,18 @@ class TestRanklistBase(unittest.TestCase):
         rk2.sort_by("profit").add_rank().add_trend()
         self.assertEqual(rk2.top(), expect_result)
 
+    def test_6_plugin_install(self):
+        rk = Ranklist('last_ranklist_cache', self.redis_connect)
+        user_1 = {
+            "gold": 120,
+            "prize": 220,
+            "uid": 1002922
+        }
+        with self.assertRaises(RuntimeError):
+        	rk.push_in(user_1)
+        	rk.plugin(add_profit)
+
+
     def tearDown(self):
         pass
 

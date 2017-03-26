@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name='Landport',
-    version='1.1.9',
+    version='1.2.3',
     url='https://github.com/land-pack/landport',
     license='MIT',
     author='Frank AK',
