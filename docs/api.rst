@@ -1,4 +1,4 @@
-Landport API
+API
 =============
 
 .. automodule:: landport

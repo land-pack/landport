@@ -6,16 +6,14 @@
 Welcome to Landport's documentation!
 ====================================
 
-This is my introduction to this project.
-
-Requirementes:
-
-flask, tornado, zeromq
+Landport is python game framework, you can easily build your game server. The common function were support, like `Game Room`, `Rank List` and `Chat` .etc
+You are welcome to send me your idea. For more see the below docs. :)
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   quickstart
    tutorial
    project
    api
