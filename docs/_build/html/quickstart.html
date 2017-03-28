@@ -67,6 +67,28 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rk</span> <span class="o">=</span> <span class="n">Ranklist</span><span class="p">(</span><span class="s1">&#39;last_ranklist_cache&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Once you get a rank list instance, you can push you data in, assume you have some data element as below show:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">frank</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;english&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+  <span class="s2">&quot;math&quot;</span><span class="p">:</span><span class="mi">99</span><span class="p">,</span>
+  <span class="s2">&quot;uid&quot;</span><span class="p">:</span> <span class="mi">1002222</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>And then, you can easily push it in your rank list.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rk</span><span class="o">.</span><span class="n">push_in</span><span class="p">(</span><span class="n">frank</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You may have a lot of data from your database, so you can easy push it in by a loop. also can do it by a <cite>push_many([...])</cite> in the future.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">my_data</span><span class="p">:</span>
+   <span class="n">rk</span><span class="o">.</span><span class="n">push_in</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For now, we got data in our Ranklist, we can sort the element and fetch what we care.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">top10</span> <span class="o">=</span> <span class="n">rk</span><span class="o">.</span><span class="n">top</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As we can see, one line code will get data which we want.</p>
 </div>
 </div>
 
