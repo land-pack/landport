@@ -6,7 +6,7 @@
 Welcome to Landport's documentation!
 ====================================
 
-Landport is a pyhton game framework, where you can easily build your game server. The common funtions are supported, like `Game Room`, `Rank List` and `Chat` etc. You are welcome to send me your ideas.
+Landport is a pyhton game framework where you can easily build your game server. The common funtions are supported, like `Game Room`, `Rank List` and `Chat` etc. You are welcome to send me your ideas.
 See below documents for more details. :)
 
 .. toctree::
