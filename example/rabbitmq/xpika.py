@@ -78,10 +78,10 @@ class PikaClient(object):
                                 routing_key='tornado.*',
                                 callback=self.on_queue_bound)
 
-        # self.channel.queue_bind(exchange='tornado',
-        #                         queue=self.queue_name,
-        #                         routing_key='tornado.{}'.format(self.roomid),
-        #                         callback=self.on_queue_bound)
+        self.channel.queue_bind(exchange='tornado',
+                                queue=self.queue_name,
+                                routing_key='group.{}'.format(self.roomid),
+                                callback=self.on_queue_bound)
 
     def on_queue_bound(self, frame):
         print('PikaClient: Queue Bound, Issuing Basic Consume')
@@ -121,6 +121,6 @@ class PikaClient(object):
             content_type="text/plain", delivery_mode=1)
 
         self.channel.basic_publish(exchange='tornado',
-                                   routing_key='tornado.{}'.format(self.roomid),
+                                   routing_key='group.{}'.format(self.roomid),
                                    body=ws_msg,
                                    properties=properties)

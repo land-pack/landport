@@ -21,7 +21,7 @@ class MyWebSocketHandler(websocket.WebSocketHandler):
 
     def on_message(self, message):
         print("New Message:{}".format(message))
-        self.pika_client.sample_message(message)
+        self.pika_client.sample_group_message(message)
 
 
     def on_close(self):
