@@ -77,7 +77,6 @@ class PikaClient(object):
                                 queue=self.queue_name,
                                 routing_key='tornado.*',
                                 callback=self.on_queue_bound)
-
         self.channel.queue_bind(exchange='tornado',
                                 queue=self.queue_name,
                                 routing_key='group.{}'.format(self.roomid),

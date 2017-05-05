@@ -1,5 +1,8 @@
 from tornado import ioloop, web, websocket
+from tornado.options import options, define
 from xpika import PikaClient
+
+define("port", default=9922, type=int, help="run on the given port")
 
 class MyWebSocketHandler(websocket.WebSocketHandler):
 
@@ -18,6 +21,7 @@ class MyWebSocketHandler(websocket.WebSocketHandler):
         self.pika_client.websocket = self
         io_loop = ioloop.IOLoop.instance()
         io_loop.add_timeout(1000, self.pika_client.connect)
+        # self.pika_client.sample_message("someone in ~ with roomid={}".format(roomid))
 
     def on_message(self, message):
         print("New Message:{}".format(message))
@@ -25,16 +29,20 @@ class MyWebSocketHandler(websocket.WebSocketHandler):
 
 
     def on_close(self):
-        print("Closed WebSocket")
+        print("Closed WebSocket")       
+        roomid = self.arg.get("roomid")
+        # self.pika_client.sample_message("someone in ~ with roomid={}".format(roomid))
         self.pika_client.connection.close()
 
 if __name__ == '__main__':
-    print("Start server - listen on port: 9922")
+    options.parse_command_line()
+    port = options.port
+    print("Start server - listen on port: {}".format(port))
     io_loop = ioloop.IOLoop.instance()
     app = web.Application(handlers=[
     (r'/ws', MyWebSocketHandler)
     ])
     pc = PikaClient(roomid='something')
     app.pika = pc
-    app.listen(9922)
+    app.listen(port)
     io_loop.start()
