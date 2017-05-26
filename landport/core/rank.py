@@ -169,3 +169,20 @@ class RanklistBase(dict):
     def top(self, care=10):
         lst = self.ranklist if self.ranklist else self.values()
         return lst[:care]
+
+
+class RankList(list):
+    def __init__(self, name, cache):
+        pass
+
+    def __setitem__(self, index, value):
+        self.app
+
+    def __lt__(self, *filter):
+        pass
+
+
+
+if __name__ == '__main__':
+    pass
+    

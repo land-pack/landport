@@ -20,8 +20,9 @@ class MyWebSocketHandler(websocket.WebSocketHandler):
         self.pika_client = PikaClient(roomid=roomid)
         self.pika_client.websocket = self
         io_loop = ioloop.IOLoop.instance()
-        io_loop.add_timeout(1000, self.pika_client.connect)
-        # self.pika_client.sample_message("someone in ~ with roomid={}".format(roomid))
+        # io_loop.add_timeout(1000, self.pika_client.connect)
+        self.pika_client.connect()
+        self.pika_client.sample_message("someone in ~ with roomid")
 
     def on_message(self, message):
         print("New Message:{}".format(message))

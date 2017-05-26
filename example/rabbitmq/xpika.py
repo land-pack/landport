@@ -11,6 +11,7 @@ class PikaClient(object):
         #Giving unique queue for each consumer under a channel.
         print("init PickClient!")
         self.queue_name = "queue-%s" % (id(self),)
+        self.publich_queue = 'publick-queue'
         # Default values
         self.connected = False
         self.connecting = False
@@ -70,23 +71,46 @@ class PikaClient(object):
                                    exclusive=True,
                                    callback=self.on_queue_declared)
 
-    def on_queue_declared(self, frame):
+        self.channel.queue_declare(auto_delete=True,
+                                   queue=self.publich_queue,
+                                   durable=False,
+                                   exclusive=True,
+                                   callback=self.on_publich_queue_declared)
 
+    def on_publich_queue_declared(self, frame):
+        print('PikaClient: Queue Declared, Binding Queue')
+        self.channel.queue_bind(exchange='tornado',
+                                queue=self.publich_queue,
+                                routing_key='tornado.*',
+                                callback=self.on_queue_bound)
+
+
+    def on_queue_declared(self, frame):
         print('PikaClient: Queue Declared, Binding Queue')
         self.channel.queue_bind(exchange='tornado',
                                 queue=self.queue_name,
                                 routing_key='tornado.*',
                                 callback=self.on_queue_bound)
+
         self.channel.queue_bind(exchange='tornado',
                                 queue=self.queue_name,
                                 routing_key='group.{}'.format(self.roomid),
                                 callback=self.on_queue_bound)
+    def on_publich_queue_bound(self, frame):
+        print('PikaClient: Queue Bound, Issuing Basic Consume')
+        self.channel.basic_consume(consumer_callback=self.on_talk_to_roomserver,
+                                   queue=self.publich_queue,
+                                   no_ack=True)
 
     def on_queue_bound(self, frame):
         print('PikaClient: Queue Bound, Issuing Basic Consume')
         self.channel.basic_consume(consumer_callback=self.on_pika_message,
                                    queue=self.queue_name,
                                    no_ack=True)
+
+    def on_talk_to_roomserver(self, channel, method, header, body):
+        print('RoomServer Update: Message receive, delivery tag #%i' %
+              method.delivery_tag)
 
     def on_pika_message(self, channel, method, header, body):
         print('PikaCient: Message receive, delivery tag #%i' %
