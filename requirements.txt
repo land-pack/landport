@@ -12,7 +12,7 @@ mysql-connector-python-rf==2.2.2
 pymongo==3.4.0
 python-daemon==2.1.2
 pytz==2016.10
-requests==2.13.0
+requests==2.20.0
 selenium==3.0.2
 singledispatch==3.4.0.3
 six==1.10.0
