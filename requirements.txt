@@ -1,7 +1,7 @@
 APScheduler==2.1.2
 backports-abc==0.5
 backports.ssl-match-hostname==3.5.0.1
-certifi==2017.1.23
+certifi==2022.12.7
 docutils==0.13.1
 funcsigs==1.0.2
 futures==3.0.5
